@@ -1,0 +1,2 @@
+option('arch', type : 'combo', choices : ['x86', 'ARM', 'all'], value : 'all')
+option('target', type : 'combo', choices : ['app', 'tests', 'all'], value : 'all')

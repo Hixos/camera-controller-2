@@ -11,27 +11,13 @@
             "problemMatcher": [
                 "$gcc"
             ],
-            "group": "build"
+            "group": "build",          
         },
         {
             "type": "shell",
             "label": "RUN CC2",
-            "command": "${workspaceFolder}/builddir/cc2-x86",
+            "command": "${workspaceFolder}/build/debug/cc2-x86",
             "group": "test"
-        },
-        {
-            "type": "shell",
-            "label": "g++ build active file",
-            "command": "/usr/bin/g++",
-            "args": [
-                "-g",
-                "${file}",
-                "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
-            ],
-            "options": {
-                "cwd": "/usr/bin"
-            }
         }
     ]
 }
