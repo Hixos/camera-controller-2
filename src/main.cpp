@@ -9,12 +9,11 @@
 #include <iostream>
 
 
-#include "camera/CameraWrapper.h"
+#include "camera/CameraWrapper2.h"
+
 using namespace std;
 
 #define USE_EVENT_INJECTOR
-
-Logger Log;
 
 EventInjector* injector;
 
@@ -44,8 +43,10 @@ void cleanUp()
 
 int main()
 {
-    // Log.d("CameraController");
+    Log.d("CameraController");
     // init();
+    CameraWrapper wrapper;
+    wrapper.connect();
 
     for (;;)
     {
