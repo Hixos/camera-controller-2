@@ -1,0 +1,36 @@
+{
+    "configurations": [
+        {
+            "name": "x86",
+            "includePath": [
+                "/usr/include/gphoto2/",
+                "${workspaceFolder}/src/"
+            ],
+            "defines": [],
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "browse": {
+                "path": [],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        },
+        {
+            "name": "ARM",
+            "includePath": [
+                "${workspaceFolder}/libraries/gphoto2/",
+                "${workspaceFolder}/src/"
+            ],
+            "defines": [],
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/src/",
+                    "${workspaceFolder}/libraries/gphoto2/"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}
