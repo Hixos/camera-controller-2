@@ -94,7 +94,7 @@ string CameraWrapper::getSerialNumber()
         CameraTextWidgetWrapper serial{*this, CONFIG_SERIAL_NUMBER};
         return serial.getValue();
     }
-    catch (GPhotoException gpe)
+    catch (GPhotoException& gpe)
     {
         Log.e("Could not read serial: %s", gpe.what());
     }
@@ -208,7 +208,7 @@ CameraWidgetType CameraWrapper::CameraWidgetWrapper::getType(
 
 string CameraWrapper::CameraWidgetWrapper::getName()
 {
-    char* value;
+    const char* value;
     int result = gp_widget_get_name(widget, &value);
 
     if (result != GP_OK)
@@ -223,7 +223,7 @@ string CameraWrapper::CameraWidgetWrapper::getName()
 
 bool CameraWrapper::CameraWidgetWrapper::isReadOnly()
 {
-    int* value;
+    int* value = nullptr;
     int result = gp_widget_get_readonly(widget, value);
 
     if (result != GP_OK)
