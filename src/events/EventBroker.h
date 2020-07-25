@@ -69,7 +69,7 @@ public:
      * @param ev
      * @param topic
      */
-    void post(const shared_ptr<const Event> &ev, uint8_t topic);
+    void post(const EventPtr &ev, uint8_t topic);
 
     /**
      * Posts an event after the specified delay.
@@ -79,7 +79,7 @@ public:
      * @param delay_ms Delay in milliseconds.
      * @return Unique id of the delayed event.
      */
-    uint16_t postDelayed(const shared_ptr<const Event> &ev, uint8_t topic,
+    uint16_t postDelayed(const EventPtr &ev, uint8_t topic,
                          unsigned int delay_ms);
 
     /**
@@ -146,11 +146,11 @@ private:
     struct DelayedEvent
     {
         uint16_t sched_id;
-        shared_ptr<const Event> event;
+        EventPtr event;
         uint8_t topic;
         system_clock::time_point deadline;
 
-        DelayedEvent(uint16_t sched_id, shared_ptr<const Event> event,
+        DelayedEvent(uint16_t sched_id, EventPtr event,
                      uint8_t topic, system_clock::time_point deadline)
             : sched_id(sched_id), event(event), topic(topic), deadline(deadline)
         {

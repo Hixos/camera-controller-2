@@ -33,8 +33,6 @@
 using std::make_shared;
 using std::shared_ptr;
 
-using EventPtr = shared_ptr<const Event>;
-
 class EventHandlerBase
 {
 public:
@@ -62,7 +60,7 @@ public:
         if (started && !stopped)
         {
             should_stop = true;
-            eventList.put(make_shared<const Event>(EV_EMPTY));
+            eventList.put(make_shared<const Event>(Event{.sig=EV_EMPTY}));
             if (thread_obj->joinable())
                 thread_obj->join();
             stopped = true;

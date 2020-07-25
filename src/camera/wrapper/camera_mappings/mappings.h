@@ -1,16 +1,17 @@
-/* Copyright (c) 2015-2016 Skyward Experimental Rocketry
- * Authors: Illya Dudchenko, Matteo Michele Piazzolla, Federico Terraneo
- *
+/**
+ * Copyright (c) 2020
+ * Authors: Luca Erbetta (luca.erbetta105@gmail.com)
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
@@ -20,40 +21,18 @@
  * THE SOFTWARE.
  */
 
-#ifndef SINGLETON_H
-#define SINGLETON_H
+#pragma once
 
-/**
- * WARNING: deriving from this class is not enough to make a singleton,
- * you also have to declare the constructor of your class private!
- *
- * \code
- * class Foo : public Singleton<Foo>
- * {
- * private:
- *     Foo() {} //Ok, private constructor
- * };
- * \endcode
- */
-template <typename T>
-class Singleton
-{
-public:
-    /**
-     * \return a pointer to the only instance of the class T
-     */
-    inline static T& getInstance()
-    {
-        static T instance;
-        return instance;
-    }
+#include <string>
 
-protected:
-    Singleton() {}
+using std::string;
 
-private:
-    Singleton(const Singleton&) = delete;
-    Singleton& operator=(const Singleton&) = delete;
-};
-
-#endif  // SINGLETON_H
+static const string CONFIG_SERIAL_NUMBER    = "serialnumber";
+static const string CONFIG_EXPOSURE_TIME    = "shutterspeed";
+static const string CONFIG_APERTURE         = "f-number";
+static const string CONFIG_ISO              = "iso";
+static const string CONFIG_TRIGGER_MODE     = "capturemode";
+static const string CONFIG_BATTERY_LEVEL    = "batterylevel";
+static const string CONFIG_EXPOSURE_PROGRAM = "expprogram";
+static const string CONFIG_BURST_COUNT      = "burstnumber";
+static const string CONFIG_FOCAL_LENGHT     = "focallength";

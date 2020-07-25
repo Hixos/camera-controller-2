@@ -29,7 +29,7 @@
 
 using std::shared_ptr;
 
-enum EventSignal : uint8_t
+enum EventSignal : uint16_t
 {
     EV_ENTRY        = 0,
     EV_EXIT         = 1,
@@ -40,15 +40,23 @@ enum EventSignal : uint8_t
 
 struct Event
 {
-    uint8_t sig;
+    uint16_t sig;
 
-    Event(uint8_t sig) : sig(sig)
+    Event(uint16_t sig) : sig(sig)
     {
-
+        
     }
 };
 
-extern const shared_ptr<const Event> C_EV_ENTRY;
-extern const shared_ptr<const Event> C_EV_EXIT;
-extern const shared_ptr<const Event> C_EV_EMPTY;
-extern const shared_ptr<const Event> C_EV_INIT;
+using EventPtr = shared_ptr<const Event>;
+
+template <typename EventClass>
+static EventPtr getEvPointer(const EventClass&& ev)
+{
+    return std::make_shared<const EventClass>(ev);
+}
+
+extern const EventPtr C_EV_ENTRY;
+extern const EventPtr C_EV_EXIT;
+extern const EventPtr C_EV_EMPTY;
+extern const EventPtr C_EV_INIT;

@@ -1,4 +1,4 @@
-project('camera_controller_2', 'cpp')
+project('camera_controller_2', 'cpp', default_options : [ 'cpp_std=c++17'])
 
 arch = get_option('arch')
 target = get_option('target')
@@ -17,16 +17,19 @@ main = 'src/main.cpp'
 
 src_common = [
        'src/camera/CameraController.cpp',
-       'src/camera/CameraWrapper2.cpp',
+       'src/camera/wrapper/CameraWrapper.cpp',
+       'src/camera/wrapper/CameraWidget.cpp',
        'src/events/Event.cpp', 
        'src/events/EventBroker.cpp', 
        'src/utils/logger.cpp'
        ]
 
-# Test main sources
-tests = ['tests/camerawrapper.cpp']
+# Catch tests
+catch_main = 'tests/catch_main.cpp'
+src_catch = ['tests/camerawrapper.cpp']
 
-# Test sources
+# Generic tests
+tests = ['tests/random_test.cpp']
 src_tests = []
 
 # Additional architecture-specific sources
@@ -76,17 +79,32 @@ if target=='app' or target=='all'
 endif
 
 if target=='test' or target=='all'
+       # Catch
+       if arch=='x86' or arch=='all'
+              executable('catch' + '-x86', 
+                     [catch_main, src_common, src_x86, src_catch], 
+                     include_directories : [inc_common, inc_x86, inc_test], 
+                     dependencies : [deps_common, deps_x86], native : true)
+       endif
+       if arch=='arm' or arch=='all'
+              executable('catch' + '-arm',  
+                     [catch_main, src_common, src_arm, src_catch], 
+                     include_directories : [inc_common, inc_arm, inc_test], 
+                     dependencies : [deps_common, deps_arm])
+       endif
+
+       # Generic tests
        foreach m  : tests
               name = m.split('/')[-1].split('.')[0]
               if arch=='x86' or arch=='all'
                      executable('test-' + name + '-x86', 
-                            [m, src_common, src_x86, src_tests], 
+                            [m, src_common, src_x86, src_tests, src_x86_tests], 
                             include_directories : [inc_common, inc_x86, inc_test], 
                             dependencies : [deps_common, deps_x86], native : true)
               endif
               if arch=='arm' or arch=='all'
                      executable('test-' + name + '-arm',  
-                            [m, src_common, src_arm, src_tests], 
+                            [m, src_common, src_arm, src_tests, src_arm_tests], 
                             include_directories : [inc_common, inc_arm, inc_test], 
                             dependencies : [deps_common, deps_arm])
               endif

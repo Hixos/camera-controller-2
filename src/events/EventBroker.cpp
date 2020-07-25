@@ -67,7 +67,7 @@ void EventBroker::post(const shared_ptr<const Event>& ev, uint8_t topic)
     }
 }
 
-uint16_t EventBroker::postDelayed(const shared_ptr<const Event>& ev,
+uint16_t EventBroker::postDelayed(const EventPtr& ev,
                                   uint8_t topic, unsigned int delay_ms)
 {
     unique_lock<mutex> lock(mtx_delayed_events);

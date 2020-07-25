@@ -26,6 +26,7 @@
 #include <string>
 #include "async/ActiveObject.h"
 #include "events/EventBroker.h"
+#include "Events.h"
 
 using std::string;
 using std::stringstream;
@@ -38,7 +39,7 @@ protected:
     {
         using namespace std;
 
-        int ev, topic;
+        uint16_t ev, topic;
         while(!shouldStop())
         {
             cout << "Insert Event & Topic:\n";
@@ -49,9 +50,26 @@ protected:
 
             switch (ev)
             {
+                case 0:
+                {
+                    should_stop = true;
+                    break;
+                }
+                case EV_CAMERA_SET_CONFIG:
+                {
+                    cout << "Insert shutter_speed aperture iso\n";
+                    CameraConfig cfg;
+                    string temp;
+                    getline(cin, temp);
+                    stringstream(temp) >> cfg.shutter_speed >> cfg.aperture >> cfg.iso;
+
+                    EventPtr evptr = getEvPointer(CameraConfigEvent(ev, cfg));
+                    sEventBroker.post(evptr, topic);
+                    break;
+                }
                 default:
                 {
-                    sEventBroker->post(make_shared<const Event>(ev), topic);
+                    sEventBroker.post(make_shared<const Event>(Event(ev)), topic);
                     break;
                 }
             }

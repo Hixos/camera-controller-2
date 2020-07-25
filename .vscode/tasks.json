@@ -6,17 +6,30 @@
             "label": "Meson build",
             "command": "ninja",
             "options": {
-                "cwd": "${workspaceFolder}/builddir"
+                "cwd": "${workspaceFolder}/build/debug"
             },
-            "problemMatcher": [
-                "$gcc"
-            ],
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": ["relative", "${workspaceFolder}/build/debug"]
+            },
             "group": "build",          
         },
         {
             "type": "shell",
-            "label": "RUN CC2",
+            "label": "RUN cc2",
             "command": "${workspaceFolder}/build/debug/cc2-x86",
+            "group": "test"
+        },
+        {
+            "type": "shell",
+            "label": "RUN catch tests",
+            "command": "${workspaceFolder}/build/debug/catch-x86",
+            "group": "test"
+        },
+        {
+            "type": "shell",
+            "label": "RUN random test",
+            "command": "${workspaceFolder}/build/debug/test-random_test-x86",
             "group": "test"
         }
     ]

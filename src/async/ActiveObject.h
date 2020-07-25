@@ -90,6 +90,7 @@ public:
     }
 
     bool isStarted() { return started; }
+    bool isStopping() { return should_stop; }
     bool isStopped() { return stopped; }
 
     bool isRunning() { return started && !stopped; }

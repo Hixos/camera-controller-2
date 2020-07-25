@@ -34,13 +34,20 @@ enum LogLevel : int
 
 static const string LEVEL_STRINGS[] = {"DEBUG", "INFO", "WARNING", "ERROR"};
 
+struct LogStream
+{
+    ostream* stream;
+    LogLevel level;
+};
+
 class Logger
 {
 public:
-    Logger(vector<pair<ostream*, LogLevel>> streams = {{&cout, LOG_DEBUG}})
+    Logger(vector<LogStream> streams = {{&cout, LOG_DEBUG}})
     {
         this->streams = streams;
     }
+
     ~Logger() {}
 
     template <typename T, typename... Args>
@@ -74,6 +81,15 @@ public:
     void addStream(ostream* stream, LogLevel minlevel)
     {
         lock_guard<mutex> l(mtx_streams);
+        for (LogStream& s : streams)
+        {
+            if (s.stream == stream)
+            {
+                s.level = minlevel;
+                return;
+            }
+        }
+
         streams.push_back({stream, minlevel});
     }
 
@@ -82,7 +98,7 @@ public:
         lock_guard<mutex> l(mtx_streams);
         for (auto it = streams.begin(); it != streams.end(); it++)
         {
-            if ((*it).first == stream)
+            if ((*it).stream == stream)
                 it = streams.erase(it);
         }
     }
@@ -96,8 +112,8 @@ public:
     template <typename T, typename... Args>
     void log(LogLevel level, const char* str, T value, Args... args)
     {
-        char buf[256];
-        sprintf(buf, str, value, args...);
+        char buf[1024];
+        snprintf(buf, 1024, str, value, args...);
 
         log(level, buf);
     }
@@ -110,18 +126,31 @@ public:
         lock_guard<mutex> l2(mtx_log);
         for (auto it = streams.begin(); it != streams.end(); it++)
         {
-            if (level >= (*it).second)
+            if (level >= (*it).level)
             {
-                *(*it).first << std::put_time(&tm, "[%H:%M:%S]") << std::left
-                             << std::setw(10) << getLogLevelString(level) << str
-                             << endl;
-                (*it).first->flush();
+                *(*it).stream << std::put_time(&tm, "[%H:%M:%S]") << std::left
+                              << std::setw(10) << getLogLevelString(level)
+                              << string(str) << endl;
+                (*it).stream->flush();
+            }
+        }
+    }
+
+    void setLevel(ostream* stream, LogLevel level)
+    {
+        lock_guard<mutex> l(mtx_streams);
+        for (LogStream& s : streams)
+        {
+            if (s.stream == stream)
+            {
+                s.level = level;
+                return;
             }
         }
     }
 
 private:
-    vector<pair<ostream*, LogLevel>> streams;
+    vector<LogStream> streams;
 
     string getLogLevelString(LogLevel level)
     {
