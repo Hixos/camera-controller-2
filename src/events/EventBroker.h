@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "Singleton.h"
+#include "utils/Singleton.h"
 #include "async/ActiveObject.h"
 
 #include "events/Event.h"
