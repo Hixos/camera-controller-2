@@ -21,7 +21,8 @@ src_common = [
        'src/camera/wrapper/CameraWidget.cpp',
        'src/events/Event.cpp', 
        'src/events/EventBroker.cpp', 
-       'src/utils/logger.cpp'
+       'src/utils/logger.cpp',
+       'src/CCEvents.cpp'
        ]
 
 # Catch tests

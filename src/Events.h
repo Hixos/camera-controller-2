@@ -1,17 +1,17 @@
 /**
  * Copyright (c) 2020
  * Authors: Luca Erbetta (luca.erbetta105@gmail.com)
- *
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
@@ -23,54 +23,20 @@
 
 #pragma once
 
+#include "CCEvents.h"
+
 #include <gphoto2/gphoto2.h>
 
 #include <cstdint>
 #include <string>
 #include <vector>
 
+#include "events/Event.h"
 #include "camera/CameraData.h"
 #include "camera/wrapper/CameraWrapper.h"
-#include "events/Event.h"
 
 using std::string;
 using std::vector;
-
-
-enum CCEvents : uint16_t
-{
-    EV_CAMERA_CONNECT = EV_FIRST_SIGNAL,
-    EV_CAMERA_CONNECTED,
-    EV_CAMERA_CONNECTION_ERROR,
-    EV_CAMERA_DISCONNECT,
-    EV_CAMERA_DISCONNECTED,
-    EV_CAMERA_GENERIC_ERROR,
-
-    EV_CAMERA_SET_CONFIG,
-    EV_CAMERA_GET_STATUS,
-    EV_CAMERA_VAL_CONFIG,
-    EV_CAMERA_VAL_STATUS,
-
-    EV_CAMERA_GET_OPTIONS,
-    EV_CAMERA_OPTIONS_SHUTTER_SPEED,
-    EV_CAMERA_OPTIONS_APERTURE,
-    EV_CAMERA_OPTIONS_ISO,
-    EV_CAMERA_OPTIONS_TRIGGER_MODE,
-
-    EV_CAMERA_CAPTURE_WIRED,
-    EV_CAMERA_CAPTURE_SUCCESS,
-    EV_CAMERA_CAPTURE_ERROR,
-
-    EV_CAMERA_DOWNLOAD
-};
-
-enum CCTopic : uint8_t
-{
-    TOPIC_CAMERA_CMD,
-    TOPIC_CAMERA_EVENT,
-    TOPIC_CAMERA_STATUS
-};
-
 struct CameraConnectedEvent : public Event
 {
     string serial;
