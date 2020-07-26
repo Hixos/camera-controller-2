@@ -1,4 +1,4 @@
-#include "CameraController.h"
+#include "CameraManager.h"
 
 #include "events/Event.h"
 #include "events/EventBroker.h"
@@ -7,11 +7,13 @@
 using namespace gphotow;
 using std::static_pointer_cast;
 
-CameraController::CameraController(CameraWrapper& camera)
-    : HSM(&CameraController::stateInit), camera(camera)
+CameraController::CameraController(CameraWrapper& camera, string download_dir)
+    : HSM(&CameraController::stateInit), camera(camera), download_dir(download_dir)
 {
     sEventBroker.subscribe(this, TOPIC_CAMERA_CMD);
     sEventBroker.subscribe(this, TOPIC_CAMERA_EVENT);
+
+    Log.d("[CameraController] (Constructor) Download dir = '%s'", download_dir.c_str());
 }
 
 State CameraController::stateInit(const EventPtr& ev)

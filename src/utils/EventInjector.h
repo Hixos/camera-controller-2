@@ -26,7 +26,7 @@
 #include <string>
 #include "async/ActiveObject.h"
 #include "events/EventBroker.h"
-#include "Events.h"
+#include "cameracontroller/Events.h"
 
 using std::string;
 using std::stringstream;

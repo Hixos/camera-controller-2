@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "camera/wrapper/CameraWrapper.h"
+#include "camera/CameraWrapper.h"
 #include <string>
 
 using namespace std;

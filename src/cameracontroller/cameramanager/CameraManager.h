@@ -1,15 +1,15 @@
-#include "Events.h"
+#include "cameracontroller/Events.h"
 #include "events/HSM.h"
 #include "collections/CircularBuffer.h"
 #include "CameraData.h"
-#include "camera/wrapper/CameraWrapper.h"
+#include "camera/CameraWrapper.h"
 
 using gphotow::CameraWrapper;
 
 class CameraController : public HSM<CameraController>
 {
 public:
-    CameraController(CameraWrapper& camera);
+    CameraController(CameraWrapper& camera, string download_dir);
 
 private:
     State stateInit(const EventPtr& ev);
@@ -44,6 +44,8 @@ private:
     CameraConfig camera_config;
 
     CameraWrapper& camera;
+
+    string download_dir;
 
     static const int MAX_RECONNECT_ATTEMPS = 3;
 };

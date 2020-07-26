@@ -4,9 +4,9 @@
         {
             "type": "shell",
             "label": "Meson build",
-            "command": "ninja",
+            "command": "meson compile -C build/debug",
             "options": {
-                "cwd": "${workspaceFolder}/build/debug"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": {
                 "base": "$gcc",

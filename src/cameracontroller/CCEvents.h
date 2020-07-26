@@ -27,40 +27,47 @@
  ******************************************************************************
  */
 
-// Autogen date:    $date
+// Autogen date:    2020-07-26 14:01:58.867932
 
-#include "CCEvents.h"
+#pragma once
 
-#include <map>
+#include <cstdint>
 #include <string>
 
-using std::map;
+#include "events/Event.h"
+
 using std::string;
 
-const map<uint16_t, string> event_string = {
-        $event_map
-    };
-
-const map<uint8_t, string> topic_string = {
-        $topic_map
-    };
-
-string getEventName(uint16_t ev)
+enum CCEvent : uint16_t
 {
-    if (event_string.count(ev) > 0)
-        return event_string.at(ev);
-    else
-    {
-        return std::to_string(ev);
-    }
-}
+    EV_CAMERA_CONNECT = EV_FIRST_SIGNAL,
+    EV_CAMERA_CONNECTED,
+    EV_CAMERA_CONNECTION_ERROR,
+    EV_CAMERA_DISCONNECT,
+    EV_CAMERA_DISCONNECTED,
+    EV_CAMERA_GENERIC_ERROR,
+    EV_CAMERA_SET_CONFIG,
+    EV_CAMERA_GET_STATUS,
+    EV_CAMERA_VAL_CONFIG,
+    EV_CAMERA_VAL_STATUS,
+    EV_CAMERA_GET_OPTIONS,
+    EV_CAMERA_OPTIONS_SHUTTER_SPEED,
+    EV_CAMERA_OPTIONS_APERTURE,
+    EV_CAMERA_OPTIONS_ISO,
+    EV_CAMERA_OPTIONS_TRIGGER_MODE,
+    EV_CAMERA_CAPTURE_WIRED,
+    EV_CAMERA_CAPTURE_SUCCESS,
+    EV_CAMERA_CAPTURE_ERROR,
+    EV_CAMERA_DOWNLOAD
+};
 
-string getTopicName(uint8_t topic)
+enum CCTopic : uint8_t
 {
-    if (topic_string.count(topic) > 0)
-        return topic_string.at(topic);
-    else
-    {
-        return std::to_string(topic);
-    }
-}
+    TOPIC_CAMERA_CMD,
+    TOPIC_CAMERA_EVENT,
+    TOPIC_CAMERA_STATUS
+};
+
+string getEventName(uint16_t ev);
+
+string getTopicName(uint8_t topic);

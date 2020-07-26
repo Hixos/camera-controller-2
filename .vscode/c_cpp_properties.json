@@ -3,9 +3,10 @@
         {
             "name": "x86",
             "includePath": [
-                "/usr/include/gphoto2/",
+                "/usr/include/",
                 "${workspaceFolder}/src/",
-                "${workspaceFolder}/libraries/catch2"
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/include/catch2"
             ],
             "defines": [],
             "cStandard": "c11",
@@ -18,9 +19,10 @@
         {
             "name": "ARM",
             "includePath": [
-                "${workspaceFolder}/libraries/gphoto2/",
                 "${workspaceFolder}/src/",
-                "${workspaceFolder}/libraries/catch2"
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/include/catch2",
+                "${workspaceFolder}/include/gphoto2"
             ],
             "defines": [],
             "cStandard": "c11",

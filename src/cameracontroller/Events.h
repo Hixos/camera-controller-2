@@ -32,8 +32,8 @@
 #include <vector>
 
 #include "events/Event.h"
-#include "camera/CameraData.h"
-#include "camera/wrapper/CameraWrapper.h"
+#include "cameracontroller/cameramanager/CameraData.h"
+#include "camera/CameraWrapper.h"
 
 using std::string;
 using std::vector;

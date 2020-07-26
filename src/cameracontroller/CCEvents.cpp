@@ -27,7 +27,7 @@
  ******************************************************************************
  */
 
-// Autogen date:    2020-07-26 03:27:39.994941
+// Autogen date:    2020-07-26 14:01:58.867932
 
 #include "CCEvents.h"
 
@@ -37,7 +37,7 @@
 using std::map;
 using std::string;
 
-const map<CCEvent, string> event_string = {
+const map<uint16_t, string> event_string = {
     {EV_CAMERA_CONNECT, "EV_CAMERA_CONNECT"},
     {EV_CAMERA_CONNECTED, "EV_CAMERA_CONNECTED"},
     {EV_CAMERA_CONNECTION_ERROR, "EV_CAMERA_CONNECTION_ERROR"},
@@ -58,12 +58,12 @@ const map<CCEvent, string> event_string = {
     {EV_CAMERA_CAPTURE_ERROR, "EV_CAMERA_CAPTURE_ERROR"},
     {EV_CAMERA_DOWNLOAD, "EV_CAMERA_DOWNLOAD"}};
 
-const map<CCTopic, string> topic_string = {
+const map<uint8_t, string> topic_string = {
     {TOPIC_CAMERA_CMD, "TOPIC_CAMERA_CMD"},
     {TOPIC_CAMERA_EVENT, "TOPIC_CAMERA_EVENT"},
     {TOPIC_CAMERA_STATUS, "TOPIC_CAMERA_STATUS"}};
 
-string getEventName(CCEvent ev)
+string getEventName(uint16_t ev)
 {
     if (event_string.count(ev) > 0)
         return event_string.at(ev);
@@ -73,7 +73,7 @@ string getEventName(CCEvent ev)
     }
 }
 
-string getTopicName(CCTopic topic)
+string getTopicName(uint8_t topic)
 {
     if (topic_string.count(topic) > 0)
         return topic_string.at(topic);

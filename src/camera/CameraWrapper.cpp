@@ -1,7 +1,7 @@
 
 #include "CameraWrapper.h"
 
-#include <gphoto2.h>
+#include <gphoto2/gphoto2.h>
 
 #include <algorithm>
 #include <chrono>

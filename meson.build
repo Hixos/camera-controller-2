@@ -3,26 +3,27 @@ project('camera_controller_2', 'cpp', default_options : [ 'cpp_std=c++17'])
 arch = get_option('arch')
 target = get_option('target')
 
-inc_common = [include_directories('src')]
+inc_common = [include_directories('src', 'include')]
 
 # Additional architecture-specific includes
 inc_x86 = [include_directories('/usr/include/gphoto2')]
-inc_arm = [include_directories('libraries/gphoto2')]
+inc_arm = [include_directories('include/gphoto2')]
 
 # Test includes
-inc_test = [include_directories('libraries/catch2'),
+inc_test = [include_directories('include/catch2'),
               include_directories('tests')]
 
 main = 'src/main.cpp'
 
 src_common = [
-       'src/camera/CameraController.cpp',
-       'src/camera/wrapper/CameraWrapper.cpp',
-       'src/camera/wrapper/CameraWidget.cpp',
+       'src/cameracontroller/cameramanager/CameraManager.cpp',
+       'src/camera/CameraWrapper.cpp',
+       'src/camera/CameraWidget.cpp',
        'src/events/Event.cpp', 
        'src/events/EventBroker.cpp', 
        'src/utils/logger.cpp',
-       'src/CCEvents.cpp'
+       'src/cameracontroller/CCEvents.cpp',
+       'src/EventLogger.cpp'
        ]
 
 # Catch tests

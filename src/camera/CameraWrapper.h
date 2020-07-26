@@ -56,7 +56,7 @@ struct CameraPath
 
     string getPath() const
     {
-        return folder + name;
+        return folder + "/" +  name;
     }
 
     CameraFilePath toCameraFilePath() const

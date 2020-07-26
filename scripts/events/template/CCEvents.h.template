@@ -49,6 +49,6 @@ enum CCTopic : uint8_t
     $topics
 };
 
-string getEventName(CCEvent ev);
+string getEventName(uint16_t ev);
 
-string getTopicName(CCTopic topic);
+string getTopicName(uint8_t topic);
