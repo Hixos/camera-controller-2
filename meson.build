@@ -1,21 +1,13 @@
 project('camera_controller_2', 'cpp', default_options : [ 'cpp_std=c++17'])
 
-arch = get_option('arch')
 target = get_option('target')
 
-inc_common = [include_directories('src', 'include')]
+inc = [include_directories('src', 'libs')]
 
-# Additional architecture-specific includes
-inc_x86 = [include_directories('/usr/include/gphoto2')]
-inc_arm = [include_directories('include/gphoto2')]
-
-# Test includes
-inc_test = [include_directories('include/catch2'),
-              include_directories('tests')]
-
+# Sources
 main = 'src/main.cpp'
 
-src_common = [
+src = [
        'src/cameracontroller/cameramanager/CameraManager.cpp',
        'src/camera/CameraWrapper.cpp',
        'src/camera/CameraWidget.cpp',
@@ -26,89 +18,49 @@ src_common = [
        'src/EventLogger.cpp'
        ]
 
+
+# Test includes
+inc_test = [include_directories('tests')]
+
 # Catch tests
 catch_main = 'tests/catch_main.cpp'
+
+# List of catch entrypoints
 src_catch = ['tests/camerawrapper.cpp']
 
-# Generic tests
+# Other stand-alone tests
 tests = ['tests/random_test.cpp']
 src_tests = []
 
-# Additional architecture-specific sources
-src_x86 = []
-src_arm = []
 
-src_x86_tests = []
-src_arm_tests = []
+# Dependencies
+deps = []
 
-deps_common = [dependency('threads')]
+deps += dependency('threads')
+deps += dependency('libgphoto2')
+deps += dependency('libgphoto2_port')
+deps += dependency('fmt')
 
-# X86 Dependecies
-deps_x86 = []
-
-deps_x86 += meson.get_compiler('cpp').find_library('exif')
-deps_x86 += meson.get_compiler('cpp').find_library('gphoto2_port')
-deps_x86 += meson.get_compiler('cpp').find_library('gphoto2')
-
-# ARM Dependencies
-deps_arm = []
-
-libsdir = meson.source_root() / 'libraries'
-
-deps_arm += meson.get_compiler('cpp').find_library('exif', dirs: libsdir)
-deps_arm += meson.get_compiler('cpp').find_library('gphoto2_port', 
-                                                dirs: libsdir)
-deps_arm += meson.get_compiler('cpp').find_library('gphoto2', dirs: libsdir)
-deps_arm += meson.get_compiler('cpp').find_library('wiringPi', dirs: libsdir)
-deps_arm += meson.get_compiler('cpp').find_library('ltdl', dirs: libsdir)
+if meson.is_cross_build()
+       sysroot = meson.get_cross_property('sys_root', '')
+       deps += meson.get_compiler('cpp').find_library('http_parser', dirs: sysroot + '/usr/local/lib')
+else
+       deps += meson.get_compiler('cpp').find_library('http_parser')
+endif
 
 if target=='app' or target=='all'
-       if arch=='x86' or arch=='all'
-              executable(
-                     'cc2-x86', 
-                     [main, src_common, src_x86], 
-                     include_directories : [inc_common, inc_x86], 
-                     dependencies : [deps_common, deps_x86], 
-                     native : true)
-       endif
-       if arch=='arm' or arch=='all'
-              executable(
-                     'cc2-arm',  
-                     [main, src_common, src_arm], 
-                     include_directories : [inc_common, inc_arm], 
-                     dependencies : [deps_common, deps_arm])
-       endif
+       executable('cc2', [main, src], include_directories : inc, dependencies : deps)
 endif
 
 if target=='test' or target=='all'
        # Catch
-       if arch=='x86' or arch=='all'
-              executable('catch' + '-x86', 
-                     [catch_main, src_common, src_x86, src_catch], 
-                     include_directories : [inc_common, inc_x86, inc_test], 
-                     dependencies : [deps_common, deps_x86], native : true)
-       endif
-       if arch=='arm' or arch=='all'
-              executable('catch' + '-arm',  
-                     [catch_main, src_common, src_arm, src_catch], 
-                     include_directories : [inc_common, inc_arm, inc_test], 
-                     dependencies : [deps_common, deps_arm])
-       endif
+       executable('catch', [catch_main, src, src_catch], include_directories : [inc, inc_test], dependencies : deps)
+
 
        # Generic tests
        foreach m  : tests
               name = m.split('/')[-1].split('.')[0]
-              if arch=='x86' or arch=='all'
-                     executable('test-' + name + '-x86', 
-                            [m, src_common, src_x86, src_tests, src_x86_tests], 
-                            include_directories : [inc_common, inc_x86, inc_test], 
-                            dependencies : [deps_common, deps_x86], native : true)
-              endif
-              if arch=='arm' or arch=='all'
-                     executable('test-' + name + '-arm',  
-                            [m, src_common, src_arm, src_tests, src_arm_tests], 
-                            include_directories : [inc_common, inc_arm, inc_test], 
-                            dependencies : [deps_common, deps_arm])
-              endif
+              executable('test_' + name, [m, src, src_tests],  include_directories : [inc, inc_test], 
+                     dependencies : deps)
        endforeach    
 endif

@@ -1,17 +1,17 @@
 /**
  * Copyright (c) 2020
  * Authors: Luca Erbetta (luca.erbetta105@gmail.com)
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
@@ -23,17 +23,16 @@
 
 #pragma once
 
-#include "CCEvents.h"
-
 #include <gphoto2/gphoto2.h>
 
 #include <cstdint>
 #include <string>
 #include <vector>
 
-#include "events/Event.h"
-#include "cameracontroller/cameramanager/CameraData.h"
+#include "CCEvents.h"
 #include "camera/CameraWrapper.h"
+#include "cameracontroller/cameramanager/CameraData.h"
+#include "events/Event.h"
 
 using std::string;
 using std::vector;
@@ -77,7 +76,7 @@ struct CameraConfigEvent : public Event
     }
 };
 
-template<typename OptionT>
+template <typename OptionT>
 struct CameraOptionListEvent : public Event
 {
     vector<OptionT> options;
@@ -88,11 +87,11 @@ struct CameraOptionListEvent : public Event
     }
 };
 
-struct CameraCapturedEvent : public Event
+struct CameraCaptureSuccessEvent : public Event
 {
     gphotow::CameraPath path;
 
-    CameraCapturedEvent(gphotow::CameraPath path)
+    CameraCaptureSuccessEvent(gphotow::CameraPath path)
         : Event(EV_CAMERA_CAPTURE_SUCCESS), path(path)
     {
     }
@@ -100,11 +99,22 @@ struct CameraCapturedEvent : public Event
 
 struct CameraDownloadEvent : public Event
 {
-    gphotow::CameraPath path;
-    string dest;
+    gphotow::CameraPath camera_path;
 
-    CameraDownloadEvent(gphotow::CameraPath path, string dest)
-        : Event(EV_CAMERA_DOWNLOAD), path(path), dest(dest)
+    CameraDownloadEvent(gphotow::CameraPath camera_path)
+        : Event(EV_CAMERA_DOWNLOAD), camera_path(camera_path)
+    {
+    }
+};
+
+struct CameraDownloadSuccessEvent : public Event
+{
+    gphotow::CameraPath camera_path;
+    string path;
+
+    CameraDownloadSuccessEvent(gphotow::CameraPath camera_path, string path)
+        : Event(EV_CAMERA_DOWNLOAD_SUCCESS), camera_path(camera_path),
+          path(path)
     {
     }
 };

@@ -5,8 +5,7 @@
             "includePath": [
                 "/usr/include/",
                 "${workspaceFolder}/src/",
-                "${workspaceFolder}/include",
-                "${workspaceFolder}/include/catch2"
+                "${workspaceFolder}/libs"
             ],
             "defines": [],
             "cStandard": "c11",
@@ -20,9 +19,8 @@
             "name": "ARM",
             "includePath": [
                 "${workspaceFolder}/src/",
-                "${workspaceFolder}/include",
-                "${workspaceFolder}/include/catch2",
-                "${workspaceFolder}/include/gphoto2"
+                "${workspaceFolder}/libs",
+                "/home/luca/raspberry/xcompile/usr/include"
             ],
             "defines": [],
             "cStandard": "c11",

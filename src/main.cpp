@@ -1,6 +1,6 @@
 #include <gphoto2/gphoto2.h>
 
-#include <cxxopts.hpp>
+#include <cxxopts/cxxopts.hpp>
 #include <functional>
 #include <iostream>
 #include <map>
@@ -44,7 +44,7 @@ void readOptions(int argc, char** argv)
 }
 
 void init()
-{
+{    
     sEventBroker.start();
 
     injector = new EventInjector();

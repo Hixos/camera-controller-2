@@ -48,10 +48,14 @@ struct CameraPath
     string folder;
     string name;
 
-    CameraPath(CameraFilePath path)
+    CameraPath() : folder(""), name("")
     {
-        folder = path.folder;
-        name = path.name;
+
+    }
+
+    CameraPath(CameraFilePath path) : folder(path.folder), name(path.name)
+    {
+ 
     }
 
     string getPath() const

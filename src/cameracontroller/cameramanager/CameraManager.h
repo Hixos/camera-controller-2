@@ -4,7 +4,12 @@
 #include "CameraData.h"
 #include "camera/CameraWrapper.h"
 
+#include <queue>
+
+
 using gphotow::CameraWrapper;
+using gphotow::CameraPath;
+using std::queue;
 
 class CameraController : public HSM<CameraController>
 {
@@ -33,6 +38,7 @@ private:
     void readOptions();
 
     void captureWired();
+    void download();
 
     bool criticalError(int gp_result);
     void postGPhotoError(const gphotow::GPhotoError& error);
@@ -44,6 +50,8 @@ private:
     CameraConfig camera_config;
 
     CameraWrapper& camera;
+
+    CameraPath to_download;
 
     string download_dir;
 

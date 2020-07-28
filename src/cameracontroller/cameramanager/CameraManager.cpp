@@ -1,19 +1,26 @@
 #include "CameraManager.h"
 
+#include <filesystem>
+#include <system_error>
+
 #include "events/Event.h"
 #include "events/EventBroker.h"
 #include "utils/logger.h"
 
+namespace fs = std::filesystem;
 using namespace gphotow;
 using std::static_pointer_cast;
+using std::filesystem::path;
 
 CameraController::CameraController(CameraWrapper& camera, string download_dir)
-    : HSM(&CameraController::stateInit), camera(camera), download_dir(download_dir)
+    : HSM(&CameraController::stateInit), camera(camera),
+      download_dir(download_dir)
 {
     sEventBroker.subscribe(this, TOPIC_CAMERA_CMD);
     sEventBroker.subscribe(this, TOPIC_CAMERA_EVENT);
 
-    Log.d("[CameraController] (Constructor) Download dir = '%s'", download_dir.c_str());
+    Log.d("[CameraController] (Constructor) Download dir = '%s'",
+          download_dir.c_str());
 }
 
 State CameraController::stateInit(const EventPtr& ev)
@@ -161,6 +168,8 @@ State CameraController::stateConnected(const EventPtr& ev)
         case EV_CAMERA_SET_CONFIG:
         case EV_CAMERA_GET_STATUS:
         case EV_CAMERA_GET_OPTIONS:
+        case EV_CAMERA_CAPTURE_WIRED:
+        case EV_CAMERA_DOWNLOAD:
         {
             deferred_events.put(ev);
             break;
@@ -227,6 +236,14 @@ State CameraController::stateIdle(const EventPtr& ev)
             retState = transition(&CameraController::stateCaptureWired);
             break;
         }
+        case EV_CAMERA_DOWNLOAD:
+        {
+            auto e      = static_pointer_cast<const CameraDownloadEvent>(ev);
+            to_download = e->camera_path;
+
+            retState = transition(&CameraController::stateDownloading);
+            break;
+        }
         case EV_CAMERA_DISCONNECT:
         {
             Log.i("[CameraController] (Idle) EV_CAMERA_DISCONNECT");
@@ -270,9 +287,17 @@ State CameraController::stateCaptureWired(const EventPtr& ev)
             retState = transition(&CameraController::stateError);
             break;
         case EV_CAMERA_CAPTURE_SUCCESS:
+        {
             Log.i("[CameraController] (Capturing) EV_CAMERA_CAPTURE_SUCCESS");
+
+            auto e = static_pointer_cast<const CameraCaptureSuccessEvent>(ev);
+
+            // EventPtr p = getEvPointer(CameraDownloadEvent(e->path));
+            // sEventBroker.post(p, TOPIC_CAMERA_CMD);
+
             retState = transition(&CameraController::stateIdle);
             break;
+        }
         default:
             retState = tran_super(&CameraController::stateConnected);
             break;
@@ -286,7 +311,7 @@ State CameraController::stateDownloading(const EventPtr& ev)
     switch (ev->sig)
     {
         case EV_ENTRY:
-            Log.i("[CameraController] (Capturing) EV_ENTRY");
+            Log.i("[CameraController] (Downloading) EV_ENTRY");
 
             if (!camera.isResponsive())
             {
@@ -297,14 +322,24 @@ State CameraController::stateDownloading(const EventPtr& ev)
                 break;
             }
 
+            download();
+
             break;
         case EV_INIT:
             break;
         case EV_EXIT:
-            Log.i("[CameraController] (Capturing) EV_EXIT");
+            Log.i("[CameraController] (Downloading) EV_EXIT");
+            break;
+        case EV_CAMERA_DOWNLOAD_ERROR:
+        case EV_CAMERA_DOWNLOAD_SUCCESS:
+            Log.i(
+                "[CameraController] (Downloading) EV_CAMERA_DOWNLOAD_ERROR / "
+                "EV_CAMERA_DOWNLOAD_SUCCESS");
+
+            retState = transition(&CameraController::stateIdle);
             break;
         default:
-            retState = tran_super(&CameraController::Hsm_top);
+            retState = tran_super(&CameraController::stateConnected);
             break;
     }
     return retState;
@@ -515,7 +550,7 @@ void CameraController::captureWired()
     try
     {
         CameraPath p = camera.wiredCapture();
-        EventPtr ev  = getEvPointer(CameraCapturedEvent(p));
+        EventPtr ev  = getEvPointer(CameraCaptureSuccessEvent(p));
         sEventBroker.post(ev, TOPIC_CAMERA_EVENT);
     }
     catch (const GPhotoError& gpe)
@@ -525,6 +560,53 @@ void CameraController::captureWired()
         sEventBroker.post(ev, TOPIC_CAMERA_EVENT);
 
         Log.e("[CameraController] (captureWired) Error capturing: %d (%s)",
+              gpe.error, gpe.what());
+    }
+}
+
+void CameraController::download()
+{
+    string photo = (path(download_dir) / to_download.name).string();
+
+    if (!fs::exists(path(download_dir)))
+    {
+        std::error_code ec;
+        if (!fs::create_directory(path(download_dir), ec))
+        {
+            EventPtr e = getEvPointer(Event(EV_CAMERA_DOWNLOAD_ERROR));
+
+            sEventBroker.post(e, TOPIC_CAMERA_EVENT);
+        }
+    }
+
+    Log.d("[Cameracontroller] (download) down file: '%s'", photo.c_str());
+
+    try
+    {
+        camera.downloadFile(to_download.toCameraFilePath(), photo);
+
+        EventPtr e =
+            getEvPointer(CameraDownloadSuccessEvent(to_download, photo));
+
+        sEventBroker.post(e, TOPIC_CAMERA_EVENT);
+    }
+    catch (const std::filesystem::filesystem_error& fe)
+    {
+        EventPtr e = getEvPointer(Event(EV_CAMERA_DOWNLOAD_ERROR));
+
+        sEventBroker.post(e, TOPIC_CAMERA_EVENT);
+
+        Log.e("[CameraController] (download) Error downloading photo: %d (%s)",
+              fe.code().value(), fe.what());
+    }
+    catch (const GPhotoError& gpe)
+    {
+        EventPtr ev =
+            getEvPointer(CameraErrorEvent(EV_CAMERA_GENERIC_ERROR, gpe.error));
+
+        sEventBroker.post(ev, TOPIC_CAMERA_EVENT);
+
+        Log.e("[CameraController] (download) Error downloading photo: %d (%s)",
               gpe.error, gpe.what());
     }
 }

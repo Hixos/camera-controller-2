@@ -27,7 +27,7 @@
  ******************************************************************************
  */
 
-// Autogen date:    2020-07-26 14:01:58.867932
+// Autogen date:    2020-07-26 16:01:01.088192
 
 #include "CCEvents.h"
 
@@ -56,7 +56,9 @@ const map<uint16_t, string> event_string = {
     {EV_CAMERA_CAPTURE_WIRED, "EV_CAMERA_CAPTURE_WIRED"},
     {EV_CAMERA_CAPTURE_SUCCESS, "EV_CAMERA_CAPTURE_SUCCESS"},
     {EV_CAMERA_CAPTURE_ERROR, "EV_CAMERA_CAPTURE_ERROR"},
-    {EV_CAMERA_DOWNLOAD, "EV_CAMERA_DOWNLOAD"}};
+    {EV_CAMERA_DOWNLOAD, "EV_CAMERA_DOWNLOAD"},
+    {EV_CAMERA_DOWNLOAD_SUCCESS, "EV_CAMERA_DOWNLOAD_SUCCESS"},
+    {EV_CAMERA_DOWNLOAD_ERROR, "EV_CAMERA_DOWNLOAD_ERROR"}};
 
 const map<uint8_t, string> topic_string = {
     {TOPIC_CAMERA_CMD, "TOPIC_CAMERA_CMD"},

@@ -4,33 +4,59 @@
         {
             "type": "shell",
             "label": "Meson build",
-            "command": "meson compile -C build/debug",
+            "command": "cd builddir/debug; meson compile",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
             "problemMatcher": {
                 "base": "$gcc",
-                "fileLocation": ["relative", "${workspaceFolder}/build/debug"]
+                "fileLocation": ["relative", "${workspaceFolder}/builddir/debug"]
+            },
+            "group": "build",          
+        },
+        {
+            "type": "shell",
+            "label": "Cross Meson build",
+            "command": "cd builddir/arm_debug; meson compile",
+
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": ["relative", "${workspaceFolder}/builddir/arm_debug"]
             },
             "group": "build",          
         },
         {
             "type": "shell",
             "label": "RUN cc2",
-            "command": "${workspaceFolder}/build/debug/cc2-x86",
+            "command": "${workspaceFolder}/builddir/debug/cc2",
+            "group": "test"
+        },
+        {
+            "type": "shell",
+            "label": "RASPBERRY RUN CC2",
+            "command": "scp ${workspaceFolder}/builddir/arm_debug/cc2 pi@192.168.1.102:/home/pi/build/;ssh -t pi@192.168.1.102 '/home/pi/build/sshrun.sh /home/pi/build/cc2'",
             "group": "test"
         },
         {
             "type": "shell",
             "label": "RUN catch tests",
-            "command": "${workspaceFolder}/build/debug/catch-x86",
+            "command": "${workspaceFolder}/builddir/debug/catch",
             "group": "test"
         },
         {
             "type": "shell",
             "label": "RUN random test",
-            "command": "${workspaceFolder}/build/debug/test-random_test-x86",
+            "command": "${workspaceFolder}/builddir/debug/test_random_test",
             "group": "test"
-        }
+        },
+        {
+            "type": "shell",
+            "label": "RASPBERRY RUN random-test",
+            "command": "scp ${workspaceFolder}/builddir/arm_debug/test_random_test pi@192.168.1.102:/home/pi/build/;ssh -t pi@192.168.1.102 '/home/pi/build/sshrun.sh /home/pi/build/test_random_test'",
+            "group": "test"
+        },
     ]
 }

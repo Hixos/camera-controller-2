@@ -69,7 +69,8 @@
         "compare": "cpp",
         "concepts": "cpp",
         "ranges": "cpp",
-        "stop_token": "cpp"
+        "stop_token": "cpp",
+        "unordered_set": "cpp"
     },
     "python.linting.pylintEnabled": false,
     "python.linting.flake8Enabled": true,

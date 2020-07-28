@@ -137,7 +137,7 @@ void onEventReceived(const EventPtr& ev, uint8_t topic)
         }
         case EV_CAMERA_CAPTURE_SUCCESS:
         {
-            auto e = static_pointer_cast<const CameraCapturedEvent>(ev);
+            auto e = static_pointer_cast<const CameraCaptureSuccessEvent>(ev);
             Log.d("(%s) %s (%s)", getTopicName(topic).c_str(),
                   getEventName(ev->sig).c_str(), e->path.getPath().c_str());
             break;
@@ -145,9 +145,17 @@ void onEventReceived(const EventPtr& ev, uint8_t topic)
         case EV_CAMERA_DOWNLOAD:
         {
             auto e = static_pointer_cast<const CameraDownloadEvent>(ev);
+            Log.d("(%s) %s (%s)", getTopicName(topic).c_str(),
+                  getEventName(ev->sig).c_str(),
+                  e->camera_path.getPath().c_str());
+            break;
+        }
+        case EV_CAMERA_DOWNLOAD_SUCCESS:
+        {
+            auto e = static_pointer_cast<const CameraDownloadSuccessEvent>(ev);
             Log.d("(%s) %s (%s -> %s)", getTopicName(topic).c_str(),
-                  getEventName(ev->sig).c_str(), e->path.getPath().c_str(),
-                  e->dest.c_str());
+                  getEventName(ev->sig).c_str(),
+                  e->camera_path.getPath().c_str(), e->path.c_str());
             break;
         }
         default:
